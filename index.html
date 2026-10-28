@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rocketry Academy</title>
+  <meta name="description" content="Interactive beginner and intermediate rocketry: anatomy, Newton's laws, stability, motors, the rocket equation, nozzles, recovery and staging — with live simulations." />
+  <meta name="theme-color" content="#05070d" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 4c8 8 12 20 12 32v10H20V36c0-12 4-24 12-32z' fill='%23e8edf5'/%3E%3Cpath d='M20 38l-8 14h8zM44 38l8 14h-8z' fill='%23ff6b2c'/%3E%3Cpath d='M26 48h12l-6 12z' fill='%23ffb347'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <div class="scroll-progress" aria-hidden="true"><span id="scrollBar"></span></div>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header" id="top">
+    <a class="brand" href="#mission" aria-label="Rocketry Academy home">
+      <svg viewBox="0 0 64 64" class="brand-mark" aria-hidden="true">
+        <path d="M32 4c8 8 12 20 12 32v10H20V36c0-12 4-24 12-32z" fill="currentColor" />
+        <path d="M20 38l-8 14h8zM44 38l8 14h-8z" fill="var(--flame)" />
+        <circle cx="32" cy="26" r="5" fill="var(--bg)" />
+      </svg>
+      <span>Rocketry<b>Academy</b></span>
+    </a>
+    <nav class="top-nav" aria-label="Primary">
+      <a href="#beginner">Beginner</a>
+      <a href="#intermediate">Intermediate</a>
+      <a href="#quiz">Quiz</a>
+      <a href="#glossary">Glossary</a>
+    </nav>
+    <div class="header-progress" title="Modules completed">
+      <svg viewBox="0 0 36 36" class="ring" aria-hidden="true">
+        <circle cx="18" cy="18" r="15.5" class="ring-bg" />
+        <circle cx="18" cy="18" r="15.5" class="ring-fg" id="progressRing" />
+      </svg>
+      <span class="mono"><b id="progressCount">0</b>/<span id="progressTotal">14</span></span>
+    </div>
+    <button class="menu-btn" id="menuBtn" aria-label="Open module list" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <div class="layout">
+    <!-- ============ SIDEBAR / MISSION RAIL ============ -->
+    <aside class="rail" id="rail" aria-label="Modules">
+      <div class="rail-inner">
+        <p class="rail-title">Flight plan</p>
+        <div class="rail-group">
+          <p class="rail-level"><span class="lvl lvl-b">01</span> Beginner</p>
+          <ol>
+            <li><a href="#b1-anatomy" data-mod="b1"><span class="rc">B1</span>Rocket anatomy</a></li>
+            <li><a href="#b2-newton" data-mod="b2"><span class="rc">B2</span>Newton's laws</a></li>
+            <li><a href="#b3-forces" data-mod="b3"><span class="rc">B3</span>The four forces</a></li>
+            <li><a href="#b4-flight" data-mod="b4"><span class="rc">B4</span>Flight profile</a></li>
+            <li><a href="#b5-motors" data-mod="b5"><span class="rc">B5</span>Motor codes</a></li>
+            <li><a href="#b6-stability" data-mod="b6"><span class="rc">B6</span>Stability: CG &amp; CP</a></li>
+            <li><a href="#b7-safety" data-mod="b7"><span class="rc">B7</span>Safety code</a></li>
+          </ol>
+        </div>
+        <div class="rail-group">
+          <p class="rail-level"><span class="lvl lvl-i">02</span> Intermediate</p>
+          <ol>
+            <li><a href="#i1-thrust" data-mod="i1"><span class="rc">I1</span>Thrust curves</a></li>
+            <li><a href="#i2-equation" data-mod="i2"><span class="rc">I2</span>Rocket equation</a></li>
+            <li><a href="#i3-isp" data-mod="i3"><span class="rc">I3</span>Specific impulse</a></li>
+            <li><a href="#i4-sim" data-mod="i4"><span class="rc">I4</span>Altitude simulator</a></li>
+            <li><a href="#i5-recovery" data-mod="i5"><span class="rc">I5</span>Recovery systems</a></li>
+            <li><a href="#i6-nozzle" data-mod="i6"><span class="rc">I6</span>Nozzle design</a></li>
+            <li><a href="#i7-staging" data-mod="i7"><span class="rc">I7</span>Staging</a></li>
+          </ol>
+        </div>
+        <div class="rail-group">
+          <ol>
+            <li><a href="#quiz"><span class="rc">Q</span>Knowledge check</a></li>
+            <li><a href="#glossary"><span class="rc">G</span>Glossary</a></li>
+          </ol>
+        </div>
+        <button class="rail-reset" id="resetProgress" type="button">Reset progress</button>
+      </div>
+    </aside>
+
+    <main id="main">
+      <!-- ============ HERO ============ -->
+      <section class="hero" id="mission">
+        <canvas id="heroCanvas" class="hero-canvas" aria-hidden="true"></canvas>
+        <div class="hero-content">
+          <p class="eyebrow mono"><span class="blink"></span> MISSION BRIEFING · T-MINUS LEARNING</p>
+          <h1>Rocketry, from <span class="grad">first principles</span> to flight.</h1>
+          <p class="hero-sub">Fourteen hands-on modules that take you from "what is a nose cone?" to nozzle expansion ratios and multi-stage Δv. Every concept comes with a live lab — drag, tweak, launch, and see the physics respond.</p>
+          <div class="hero-cta">
+            <a href="#beginner" class="btn btn-primary">Start the Beginner track</a>
+            <a href="#intermediate" class="btn btn-ghost">Jump to Intermediate</a>
+          </div>
+          <div class="hero-stats mono">
+            <div><b>14</b><span>modules</span></div>
+            <div><b>15+</b><span>live labs</span></div>
+            <div><b>2</b><span>levels</span></div>
+            <div><b>0 kg</b><span>propellant needed</span></div>
+          </div>
+        </div>
+        <div class="launch-console">
+          <div class="console-row mono"><span>PAD 39-H</span><span id="heroStatus">GO FOR LAUNCH</span></div>
+          <div class="countdown mono" id="heroCount">T-10</div>
+          <button class="btn btn-launch" id="heroLaunch" type="button">Launch</button>
+        </div>
+      </section>
+
+      <!-- ============ ROADMAP ============ -->
+      <section class="roadmap" id="roadmap">
+        <div class="section-intro">
+          <p class="eyebrow mono">FLIGHT PLAN</p>
+          <h2>Two stages to orbit</h2>
+          <p>Work through the levels in order — each module builds on the one before it. Mark modules complete as you go; your progress is saved in this browser.</p>
+        </div>
+        <div class="roadmap-grid">
+          <article class="road-card">
+            <div class="road-head"><span class="lvl lvl-b">01</span><h3>Beginner — Foundations of flight</h3></div>
+            <p>What a rocket is made of, why it flies, why it flies <em>straight</em>, and how to launch one safely.</p>
+            <ul class="road-list" id="roadB"></ul>
+          </article>
+          <article class="road-card">
+            <div class="road-head"><span class="lvl lvl-i">02</span><h3>Intermediate — Engineering a flight</h3></div>
+            <p>The quantitative side: impulse, Isp, Δv, drag-aware simulation, parachute sizing, nozzle expansion and staging.</p>
+            <ul class="road-list" id="roadI"></ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           LEVEL 01 — BEGINNER
+           ===================================================== -->
+      <div class="track-banner" id="beginner">
+        <span class="lvl lvl-b big">01</span>
+        <div>
+          <p class="eyebrow mono">LEVEL 01</p>
+          <h2>Beginner · Foundations of flight</h2>
+        </div>
+      </div>
+
+      <!-- B1 Anatomy -->
+      <section class="module reveal" id="b1-anatomy" data-module="b1">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">B1</span> Beginner · 5 min</p>
+          <h2>Anatomy of a model rocket</h2>
+          <p class="lead">Every model rocket — from a 30-gram Estes kit to a two-metre high-power build — has the same core parts. Learn them once and every design you see afterwards will make sense.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <p>A rocket is a <strong>pressure vessel with a hole in one end</strong>, wrapped in an airframe that keeps it pointed the right way and brings it back in one piece. The airframe has three jobs:</p>
+            <ul class="ticks">
+              <li><strong>Hold the motor</strong> and transfer its thrust into the body (motor mount, centering rings, engine hook).</li>
+              <li><strong>Stay aerodynamically stable</strong> — nose cone in front, fins at the back.</li>
+              <li><strong>Recover safely</strong> — the motor's ejection charge pops the nose off and deploys a parachute or streamer.</li>
+            </ul>
+            <p>Tap any part on the diagram, or hit <em>Explode view</em> to pull the rocket apart.</p>
+            <div class="part-card" id="partInfo" aria-live="polite">
+              <p class="part-name">Select a part</p>
+              <p class="part-desc">Each part has a job. Click one on the diagram to see what it does and what it's usually made from.</p>
+            </div>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB 1.1 · INTERACTIVE CUTAWAY</span></div>
+            <div class="anatomy-wrap">
+              <svg viewBox="0 0 260 640" class="anatomy" id="anatomySvg" role="img" aria-label="Model rocket cutaway diagram">
+                <defs>
+                  <linearGradient id="tubeGrad" x1="0" x2="1">
+                    <stop offset="0" stop-color="#9aa6bd" stop-opacity=".25" />
+                    <stop offset=".5" stop-color="#e8edf5" stop-opacity=".18" />
+                    <stop offset="1" stop-color="#9aa6bd" stop-opacity=".25" />
+                  </linearGradient>
+                </defs>
+                <g class="part" data-part="nose" tabindex="0">
+                  <path d="M105 160 C105 105 122 62 130 40 C138 62 155 105 155 160 Z" fill="#ff6b2c" />
+                  <rect x="110" y="160" width="40" height="14" fill="#e06025" />
+                </g>
+                <g class="part" data-part="chute" tabindex="0">
+                  <path d="M100 196 Q130 168 160 196 Z" fill="#4cc9f0" opacity=".85" />
+                  <path d="M102 196 L130 232 M130 196 L130 232 M158 196 L130 232" stroke="#4cc9f0" stroke-width="1.2" fill="none" />
+                  <rect x="122" y="232" width="16" height="8" rx="2" fill="#4cc9f0" />
+                </g>
+                <g class="part" data-part="cord" tabindex="0">
+                  <path d="M130 240 q10 12 0 24 q-10 12 0 24 q10 12 0 24 q-10 12 0 24" stroke="#ffd166" stroke-width="2.5" fill="none" />
+                </g>
+                <g class="part" data-part="wadding" tabindex="0">
+                  <rect x="112" y="342" width="36" height="22" rx="3" fill="#ffd6e0" opacity=".85" />
+                  <path d="M116 348 h28 M116 353 h28 M116 358 h28" stroke="#d48aa0" stroke-width="1" />
+                </g>
+                <g class="part" data-part="body" tabindex="0">
+                  <rect x="105" y="174" width="50" height="336" fill="url(#tubeGrad)" stroke="#c9d2e3" stroke-width="2" />
+                  <rect x="105" y="270" width="50" height="10" fill="#ff6b2c" opacity=".55" />
+                </g>
+                <g class="part" data-part="lug" tabindex="0">
+                  <rect x="155" y="330" width="9" height="56" rx="2" fill="#c9d2e3" />
+                </g>
+                <g class="part" data-part="mount" tabindex="0">
+                  <rect x="111" y="404" width="38" height="8" fill="#ffb347" />
+                  <rect x="111" y="476" width="38" height="8" fill="#ffb347" />
+                  <rect x="113" y="410" width="34" height="2" fill="#a86c1f" />
+                </g>
+                <g class="part" data-part="motor" tabindex="0">
+                  <rect x="116" y="412" width="28" height="112" rx="3" fill="#8a5a2b" />
+                  <rect x="116" y="412" width="28" height="12" fill="#5d3c1c" />
+                  <rect x="116" y="506" width="28" height="18" fill="#6d6d6d" />
+                  <text x="130" y="470" text-anchor="middle" font-size="11" font-family="JetBrains Mono" fill="#f3e3cf" transform="rotate(-90 130 470)">C6-5</text>
+                </g>
+                <g class="part" data-part="fins" tabindex="0">
+                  <path d="M105 420 L58 500 L58 532 L105 510 Z" fill="#ff6b2c" />
+                  <path d="M155 420 L202 500 L202 532 L155 510 Z" fill="#ff6b2c" />
+                  <rect x="126" y="424" width="8" height="90" fill="#e06025" opacity=".75" />
+                </g>
+              </svg>
+              <div class="anatomy-controls">
+                <button class="btn btn-small" id="explodeBtn" type="button" aria-pressed="false">Explode view</button>
+                <div class="chips" id="partChips"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Nose cone and fins handle aerodynamics, the motor mount handles thrust, and the ejection charge + parachute handle recovery. Everything else is detail.</p>
+          <button class="btn-complete" data-complete="b1" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- B2 Newton -->
+      <section class="module reveal" id="b2-newton" data-module="b2">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">B2</span> Beginner · 6 min</p>
+          <h2>Newton's three laws, on the launch pad</h2>
+          <p class="lead">Rockets don't push against the air or the ground. They throw mass out the back very fast — and Newton guarantees the rocket goes the other way.</p>
+        </header>
+        <div class="tabs" role="tablist" data-tabs="newton">
+          <button role="tab" aria-selected="true" data-tab="n1">1 · Inertia</button>
+          <button role="tab" aria-selected="false" data-tab="n2">2 · F = m·a</button>
+          <button role="tab" aria-selected="false" data-tab="n3">3 · Action–reaction</button>
+        </div>
+        <div class="module-grid">
+          <div class="module-text">
+            <div class="tab-panel" data-panel="n1">
+              <h3>First law — inertia</h3>
+              <p>An object stays at rest, or keeps moving at constant velocity, <strong>unless a net force acts on it</strong>. A rocket on the pad is in balance: its weight pulls down, the pad pushes up. Nothing happens until the motor creates a force bigger than the weight.</p>
+              <p>After burnout the rocket keeps climbing — that's inertia. Gravity and drag slowly take that velocity away until the rocket stops at <strong>apogee</strong>.</p>
+            </div>
+            <div class="tab-panel" data-panel="n2" hidden>
+              <h3>Second law — F = m·a</h3>
+              <p>Acceleration equals <strong>net force divided by mass</strong>. For a rocket on the pad, the net force is thrust minus weight:</p>
+              <p class="formula mono">a = (T − m·g) / m</p>
+              <p>If thrust is less than weight the rocket doesn't move at all. The ratio <strong>T / (m·g)</strong> is the <em>thrust-to-weight ratio</em>. Hobby guidelines ask for at least <strong>5 : 1</strong> so the rocket leaves the launch rod fast enough to be stable.</p>
+              <p>Try the lab: lower the thrust or raise the mass until the rocket can't lift off.</p>
+            </div>
+            <div class="tab-panel" data-panel="n3" hidden>
+              <h3>Third law — action and reaction</h3>
+              <p>For every action there's an equal and opposite reaction. Burning propellant creates hot, high-pressure gas; the nozzle accelerates it <strong>out the back</strong> at thousands of metres per second, so the rocket is pushed <strong>forward</strong>.</p>
+              <p>This is why rockets work in a vacuum. There's nothing to "push against" — the rocket pushes against its own exhaust. Thrust is simply:</p>
+              <p class="formula mono">T = ṁ · vₑ  (+ pressure term)</p>
+              <p>where ṁ is mass flow rate and vₑ is exhaust velocity. You'll meet the pressure term again in <a href="#i6-nozzle">I6 · Nozzle design</a>.</p>
+            </div>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB 2.1 · THRUST VS. WEIGHT</span></div>
+            <div class="lab-split">
+              <canvas id="newtonCanvas" class="cv cv-tall" aria-label="Rocket acceleration animation"></canvas>
+              <div class="controls">
+                <label class="ctl"><span>Thrust <output class="mono" id="nwTv">12 N</output></span><input type="range" id="nwT" min="0" max="40" step="0.5" value="12" /></label>
+                <label class="ctl"><span>Mass <output class="mono" id="nwMv">0.10 kg</output></span><input type="range" id="nwM" min="0.05" max="1.5" step="0.01" value="0.10" /></label>
+                <div class="readouts mono">
+                  <div><span>Weight</span><b id="nwW">—</b></div>
+                  <div><span>T / W</span><b id="nwR">—</b></div>
+                  <div><span>Accel.</span><b id="nwA">—</b></div>
+                  <div><span>After 1 s</span><b id="nwH">—</b></div>
+                </div>
+                <p class="verdict" id="nwVerdict"></p>
+                <button class="btn btn-primary btn-block" id="nwGo" type="button">Ignite (1 s burn)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Thrust must exceed weight to leave the pad, and the bigger the surplus relative to mass, the harder the rocket accelerates.</p>
+          <button class="btn-complete" data-complete="b2" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- B3 Forces -->
+      <section class="module reveal" id="b3-forces" data-module="b3">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">B3</span> Beginner · 5 min</p>
+          <h2>The four forces of flight</h2>
+          <p class="lead">Thrust, weight, drag and lift act on every rocket. Which one wins changes through the flight — and that decides what the rocket does next.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <dl class="force-list">
+              <div><dt><i style="--c:var(--flame)"></i>Thrust</dt><dd>Push from the motor, along the rocket's axis. Only exists while the motor burns.</dd></div>
+              <div><dt><i style="--c:var(--cyan)"></i>Weight</dt><dd>Gravity pulling the total mass down, acting at the <strong>centre of gravity</strong>. Falls slightly as propellant burns.</dd></div>
+              <div><dt><i style="--c:var(--red)"></i>Drag</dt><dd>Air resistance, always <strong>opposite to the direction of motion</strong>. Grows with the square of speed.</dd></div>
+              <div><dt><i style="--c:var(--green)"></i>Lift</dt><dd>Sideways force from the fins when the rocket is at an angle to the airflow. It's what <em>corrects</em> the rocket's heading.</dd></div>
+            </dl>
+            <p class="phase-text" id="forcePhaseText" aria-live="polite"></p>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB 3.1 · FORCE DIAGRAM BY FLIGHT PHASE</span></div>
+            <div class="seg" role="group" aria-label="Flight phase" id="forcePhases">
+              <button data-phase="pad" class="on">On pad</button>
+              <button data-phase="boost">Powered</button>
+              <button data-phase="coast">Coast</button>
+              <button data-phase="descent">Descent</button>
+            </div>
+            <canvas id="forcesCanvas" class="cv cv-tall" aria-label="Four forces diagram"></canvas>
+            <label class="switch"><input type="checkbox" id="forceWind" /> <span>Add a crosswind gust (shows lift)</span></label>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> During boost thrust dominates; during coast weight and drag decelerate the rocket; during descent drag (mostly the parachute) balances weight.</p>
+          <button class="btn-complete" data-complete="b3" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- B4 Flight profile -->
+      <section class="module reveal" id="b4-flight" data-module="b4">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">B4</span> Beginner · 6 min</p>
+          <h2>Anatomy of a flight</h2>
+          <p class="lead">A typical model rocket flight lasts about a minute, but almost all the action happens in the first eight seconds. Play the flight or click any phase.</p>
+        </header>
+        <div class="lab lab-wide">
+          <div class="lab-head"><span class="dot"></span><span class="mono">LAB 4.1 · FLIGHT TIMELINE · ALPHA III ON A C6-5</span></div>
+          <div class="flight-layout">
+            <canvas id="flightCanvas" class="cv cv-flight" aria-label="Flight profile animation"></canvas>
+            <ol class="phase-list" id="phaseList"></ol>
+          </div>
+          <div class="flight-bar">
+            <button class="btn btn-primary" id="flightPlay" type="button">Play flight</button>
+            <input type="range" id="flightScrub" min="0" max="1000" value="0" aria-label="Scrub flight timeline" />
+            <span class="mono flight-t" id="flightT">T+0.0 s</span>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Boost → burnout → coast → apogee → ejection → descent. The motor's <em>delay</em> number exists so the ejection happens near apogee, when the rocket is slowest.</p>
+          <button class="btn-complete" data-complete="b4" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- B5 Motors -->
+      <section class="module reveal" id="b5-motors" data-module="b5">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">B5</span> Beginner · 7 min</p>
+          <h2>Reading a motor code</h2>
+          <p class="lead">The code printed on every hobby motor — like <span class="mono hl">C6-5</span> — tells you how much push it has in total, how hard it pushes, and how long it waits before deploying the parachute.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <div class="code-explain mono" aria-hidden="true">
+              <span class="ce ce-1" id="ceL">C</span><span class="ce ce-2" id="ceT">6</span><span class="ce-dash">-</span><span class="ce ce-3" id="ceD">5</span>
+            </div>
+            <ul class="legend-list">
+              <li><b class="k1">Letter</b> — total impulse class (N·s). <strong>Each letter doubles</strong> the maximum: a C has up to twice the total impulse of a B.</li>
+              <li><b class="k2">Number</b> — average thrust in newtons. Higher = harder kick, shorter burn.</li>
+              <li><b class="k3">Delay</b> — seconds between burnout and ejection. <span class="mono">-0</span> means no ejection (booster stage); <span class="mono">P</span> means plugged.</li>
+            </ul>
+            <p>Since <span class="mono">impulse = average thrust × burn time</span>, you can estimate the burn time straight from the code.</p>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB 5.1 · MOTOR DECODER</span></div>
+            <div class="chips" id="motorPresets" aria-label="Common motors"></div>
+            <div class="decoder">
+              <label class="ctl"><span>Impulse class</span><select id="mcClass"></select></label>
+              <label class="ctl"><span>Average thrust <output class="mono" id="mcTv">6 N</output></span><input type="range" id="mcT" min="1" max="120" step="1" value="6" /></label>
+              <label class="ctl"><span>Delay <output class="mono" id="mcDv">5 s</output></span><input type="range" id="mcD" min="0" max="10" step="1" value="5" /></label>
+            </div>
+            <div class="readouts mono four">
+              <div><span>Total impulse</span><b id="mcI">—</b></div>
+              <div><span>Burn time</span><b id="mcB">—</b></div>
+              <div><span>Class</span><b id="mcC">—</b></div>
+              <div><span>Rating</span><b id="mcR" class="small">—</b></div>
+            </div>
+            <svg viewBox="0 0 420 96" class="motor-cut" id="motorCut" aria-label="Motor cutaway">
+              <rect x="20" y="20" width="360" height="56" rx="6" fill="none" stroke="#c9d2e3" stroke-width="2" />
+              <rect x="22" y="22" width="44" height="52" fill="#8b8f99" />
+              <path d="M22 42 L44 46 L44 50 L22 54 Z" fill="#05070d" />
+              <rect id="mcProp" x="66" y="22" width="180" height="52" fill="#3a3f4b" />
+              <rect id="mcDelay" x="246" y="22" width="60" height="52" fill="#6c5a3d" />
+              <rect id="mcEject" x="306" y="22" width="34" height="52" fill="#d9a441" />
+              <rect x="340" y="22" width="38" height="52" fill="#a8adb8" />
+              <g id="mcFlame" opacity="0"><path d="M20 48 L-10 36 Q-40 48 -10 60 Z" fill="#ffb347" /></g>
+              <g id="mcBlast" opacity="0"><circle cx="392" cy="48" r="20" fill="#ffd166" /></g>
+              <g class="mc-labels" font-family="JetBrains Mono" font-size="9" fill="#8b97b0">
+                <text x="44" y="90" text-anchor="middle">nozzle</text>
+                <text x="156" y="90" text-anchor="middle">propellant</text>
+                <text x="276" y="90" text-anchor="middle">delay</text>
+                <text x="323" y="90" text-anchor="middle">eject</text>
+                <text x="359" y="90" text-anchor="middle">cap</text>
+              </g>
+              <text x="200" y="14" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#8b97b0" id="mcPhase">READY</text>
+            </svg>
+            <button class="btn btn-primary btn-block" id="mcFire" type="button">Static fire</button>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Letter = how much total push, number = how hard, delay = when the parachute comes out. Pick the delay that matches your rocket's coast time.</p>
+          <button class="btn-complete" data-complete="b5" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- B6 Stability -->
+      <section class="module reveal" id="b6-stability" data-module="b6">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">B6</span> Beginner · 8 min</p>
+          <h2>Stability: centre of gravity vs. centre of pressure</h2>
+          <p class="lead">The single most important rule in rocketry: <strong>the centre of gravity (CG) must sit ahead of the centre of pressure (CP)</strong> — by about one to two body diameters.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <p><strong>CG</strong> is the balance point — where the rocket's mass is centred. Find it by balancing the loaded rocket on your finger.</p>
+            <p><strong>CP</strong> is where the aerodynamic forces are centred. Fins at the back drag the CP rearward, the same way feathers keep an arrow straight.</p>
+            <p>When a gust tilts the rocket, air pushes on it at the CP. If the CP is <em>behind</em> the CG, that push rotates the nose back into the wind — the rocket corrects itself. If the CP is in front, the push makes the tilt worse and the rocket tumbles.</p>
+            <p>The distance between them, in body diameters (<em>calibers</em>), is the <strong>stability margin</strong>:</p>
+            <ul class="legend-list compact">
+              <li><b class="bad">&lt; 1 cal</b> — marginal or unstable. Add nose weight or bigger fins.</li>
+              <li><b class="good">1 – 2 cal</b> — the sweet spot.</li>
+              <li><b class="warn">&gt; 2.5 cal</b> — over-stable: it weathercocks hard into the wind.</li>
+            </ul>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB 6.1 · STABILITY BENCH (BARROWMAN)</span></div>
+            <canvas id="stabCanvas" class="cv cv-stab" aria-label="Rocket with CG and CP markers"></canvas>
+            <div class="controls two">
+              <label class="ctl"><span>Nose weight <output class="mono" id="stNwv">0 g</output></span><input type="range" id="stNw" min="0" max="15" step="0.5" value="0" /></label>
+              <label class="ctl"><span>Fin span <output class="mono" id="stSv">3.0 cm</output></span><input type="range" id="stS" min="1" max="7" step="0.1" value="3" /></label>
+              <label class="ctl"><span>Fin count</span>
+                <span class="seg seg-sm" id="stN"><button data-n="3" class="on">3</button><button data-n="4">4</button></span></label>
+              <label class="ctl"><span>Motor</span>
+                <span class="seg seg-sm" id="stMotor"><button data-m="16.2">A8</button><button data-m="19.8">B6</button><button data-m="24.1" class="on">C6</button></span></label>
+            </div>
+            <div class="stab-meter">
+              <div class="meter-track"><span class="z z1"></span><span class="z z2"></span><span class="z z3"></span><i id="stNeedle"></i></div>
+              <div class="meter-scale mono"><span>-1</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span></div>
+            </div>
+            <div class="readouts mono four">
+              <div><span>CG from nose</span><b id="stCg">—</b></div>
+              <div><span>CP from nose</span><b id="stCp">—</b></div>
+              <div><span>Margin</span><b id="stM">—</b></div>
+              <div><span>Mass</span><b id="stMass">—</b></div>
+            </div>
+            <p class="verdict" id="stVerdict"></p>
+            <button class="btn btn-ghost btn-block" id="stFly" type="button">Fly through a gust</button>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> CG in front of CP by 1–2 calibers. Move CG forward with nose weight, or move CP back with larger fins.</p>
+          <button class="btn-complete" data-complete="b6" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- B7 Safety -->
+      <section class="module reveal" id="b7-safety" data-module="b7">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">B7</span> Beginner · 4 min</p>
+          <h2>The safety code &amp; pre-flight checklist</h2>
+          <p class="lead">Hobby rocketry has an excellent safety record because everyone follows the same code. Run the checklist below — the launch button only arms when every item is checked.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <p>This checklist summarises the key points of the <strong>NAR Model Rocket Safety Code</strong>. Always read the full code from your national association (NAR, Tripoli, UKRA, etc.) and follow local law.</p>
+            <ul class="ticks">
+              <li>Only <strong>certified, commercially made</strong> motors. Never modify a motor or mix your own propellant at the beginner level.</li>
+              <li>Ignite only with an <strong>electrical launch system</strong> with a removable safety key.</li>
+              <li>If a motor misfires: <strong>remove the key and wait 60 seconds</strong> before approaching.</li>
+              <li>Never try to retrieve a rocket from power lines or tall trees.</li>
+            </ul>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB 7.1 · RANGE SAFETY OFFICER</span></div>
+            <ul class="checklist" id="checklist"></ul>
+            <div class="arm-panel">
+              <div class="arm-status mono" id="armStatus">SAFE · <span id="armCount">0</span>/<span id="armTotal">0</span></div>
+              <button class="btn btn-launch" id="armLaunch" type="button" disabled>5-second countdown</button>
+            </div>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Certified motors, electrical ignition, a clear field, a 5-second countdown, and patience with misfires.</p>
+          <button class="btn-complete" data-complete="b7" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- =====================================================
+           LEVEL 02 — INTERMEDIATE
+           ===================================================== -->
+      <div class="track-banner" id="intermediate">
+        <span class="lvl lvl-i big">02</span>
+        <div>
+          <p class="eyebrow mono">LEVEL 02</p>
+          <h2>Intermediate · Engineering a flight</h2>
+        </div>
+      </div>
+
+      <!-- I1 Thrust curves -->
+      <section class="module reveal" id="i1-thrust" data-module="i1">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">I1</span> Intermediate · 8 min</p>
+          <h2>Thrust curves &amp; grain geometry</h2>
+          <p class="lead">Two motors with identical total impulse can fly very differently. The <em>shape</em> of the thrust curve comes from the shape of the propellant grain — because thrust tracks the burning surface area.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <p>Solid propellant burns perpendicular to its exposed surface at a roughly constant rate. So the thrust over time follows how the <strong>burning area</strong> changes as the flame front moves:</p>
+            <ul class="legend-list compact">
+              <li><b>End burner</b> — burns like a cigarette. Constant area → <em>neutral</em>, long and gentle.</li>
+              <li><b>Core burner</b> — hollow tube burning outward. Area grows → <em>progressive</em>.</li>
+              <li><b>BATES</b> — short cored segments, ends exposed. Growing core offsets shrinking ends → nearly <em>neutral</em>.</li>
+              <li><b>Star</b> — star-shaped core. Points burn away fast → high initial thrust, then <em>regressive</em>.</li>
+            </ul>
+            <p>The area under the curve is the <strong>total impulse</strong>: <span class="mono">I = ∫ T dt</span>. Drag across the chart to read instantaneous thrust and impulse delivered so far.</p>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB I1.1 · GRAIN BURN-BACK</span></div>
+            <div class="seg" id="grainType" role="group" aria-label="Grain type">
+              <button data-g="end">End burner</button>
+              <button data-g="core" class="on">Core</button>
+              <button data-g="bates">BATES</button>
+              <button data-g="star">Star</button>
+            </div>
+            <div class="grain-row">
+              <canvas id="grainCanvas" class="cv cv-grain" aria-label="Grain cross-section"></canvas>
+              <canvas id="thrustCanvas" class="cv cv-chart" aria-label="Thrust curve chart"></canvas>
+            </div>
+            <div class="controls two">
+              <label class="ctl"><span>Average thrust <output class="mono" id="tcTv">40 N</output></span><input type="range" id="tcT" min="5" max="200" step="1" value="40" /></label>
+              <label class="ctl"><span>Burn time <output class="mono" id="tcBv">2.0 s</output></span><input type="range" id="tcB" min="0.3" max="6" step="0.1" value="2" /></label>
+            </div>
+            <div class="readouts mono four">
+              <div><span>Total impulse</span><b id="tcI">—</b></div>
+              <div><span>Class</span><b id="tcC">—</b></div>
+              <div><span>Peak thrust</span><b id="tcP">—</b></div>
+              <div><span>Cursor</span><b id="tcCur">—</b></div>
+            </div>
+            <button class="btn btn-ghost btn-block" id="tcPlay" type="button">Animate burn</button>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Impulse is the area under the thrust curve. Grain geometry sets the curve's shape: progressive, neutral, or regressive.</p>
+          <button class="btn-complete" data-complete="i1" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- I2 Rocket equation -->
+      <section class="module reveal" id="i2-equation" data-module="i2">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">I2</span> Intermediate · 8 min</p>
+          <h2>The Tsiolkovsky rocket equation</h2>
+          <p class="lead">How much velocity change (Δv) a rocket can produce depends on only two things: how efficient its engine is, and what fraction of it is propellant.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <p class="formula big mono">Δv = I<sub>sp</sub> · g₀ · ln(m₀ / m<sub>f</sub>)</p>
+            <ul class="legend-list compact">
+              <li><b>I<sub>sp</sub></b> — specific impulse (seconds); engine efficiency.</li>
+              <li><b>g₀</b> — 9.80665 m/s². I<sub>sp</sub>·g₀ is the effective exhaust velocity.</li>
+              <li><b>m₀ / m<sub>f</sub></b> — mass ratio: fully fuelled mass over empty mass.</li>
+            </ul>
+            <p>The <strong>natural log</strong> is the brutal part. Doubling the mass ratio doesn't double Δv — it adds a fixed amount. That's the <em>tyranny of the rocket equation</em>, and the reason orbital rockets are about 90 % propellant.</p>
+            <p>Reaching low Earth orbit takes roughly <strong>9.4 km/s</strong> of Δv once gravity and drag losses are included. Try to get there with one stage.</p>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB I2.1 · Δv BUDGET</span></div>
+            <div class="controls">
+              <label class="ctl"><span>Specific impulse <output class="mono" id="reIv">300 s</output></span><input type="range" id="reI" min="60" max="460" step="1" value="300" /></label>
+              <label class="ctl"><span>Propellant fraction <output class="mono" id="reFv">85 %</output></span><input type="range" id="reF" min="5" max="96" step="0.5" value="85" /></label>
+            </div>
+            <div class="tank-row">
+              <div class="tank" aria-hidden="true"><div class="tank-fill" id="reTank"></div><span class="mono">PROP</span></div>
+              <div class="readouts mono stack">
+                <div><span>Mass ratio m₀/m<sub>f</sub></span><b id="reMR">—</b></div>
+                <div><span>Exhaust velocity</span><b id="reVe">—</b></div>
+                <div><span>Δv</span><b id="reDv" class="xl">—</b></div>
+              </div>
+            </div>
+            <div class="orbit-bar"><div class="ob-fill" id="reBar"></div><span class="ob-mark" style="left:62.67%"><i></i>LEO 9.4 km/s</span></div>
+            <canvas id="reCanvas" class="cv cv-chart" aria-label="Delta-v vs mass ratio chart"></canvas>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Δv grows only logarithmically with mass ratio. Better Isp or dropping empty mass (staging) are the only ways out.</p>
+          <button class="btn-complete" data-complete="i2" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- I3 Isp -->
+      <section class="module reveal" id="i3-isp" data-module="i3">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">I3</span> Intermediate · 6 min</p>
+          <h2>Specific impulse &amp; propellants</h2>
+          <p class="lead">Specific impulse is "miles per gallon" for rockets: how many seconds one unit of propellant weight can produce one unit of thrust. Higher is more efficient.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <p class="formula mono">I<sub>sp</sub> = T / (ṁ · g₀)  ⇔  vₑ = I<sub>sp</sub> · g₀</p>
+            <p>Isp depends on combustion temperature and the <strong>molecular weight</strong> of the exhaust: hot, light gas leaves fastest. That's why hydrogen wins on Isp — but it's very low density, so it needs huge tanks.</p>
+            <p>Isp is always higher in vacuum, because there is no ambient pressure pushing back on the nozzle exit. Toggle the view to compare.</p>
+            <div class="part-card" id="ispInfo" aria-live="polite">
+              <p class="part-name">Select a propellant</p>
+              <p class="part-desc">Click a bar to see where it's used and why.</p>
+            </div>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB I3.1 · PROPELLANT COMPARISON</span></div>
+            <div class="seg" id="ispMode" role="group" aria-label="Environment">
+              <button data-mode="sl" class="on">Sea level</button>
+              <button data-mode="vac">Vacuum</button>
+            </div>
+            <div class="bars" id="ispBars"></div>
+            <p class="fineprint">Representative values. Real figures vary with engine design, chamber pressure and nozzle expansion.</p>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Hobby solids run 80–250 s, kerosene and methane engines around 300–380 s, hydrogen around 450 s in vacuum.</p>
+          <button class="btn-complete" data-complete="i3" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- I4 Sim -->
+      <section class="module reveal" id="i4-sim" data-module="i4">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">I4</span> Intermediate · 10 min</p>
+          <h2>Altitude simulator with drag</h2>
+          <p class="lead">A real flight simulator integrates thrust, gravity, drag and changing mass a few thousand times per second. This one does exactly that — the same core loop as tools like OpenRocket, in one dimension.</p>
+        </header>
+        <div class="lab lab-wide">
+          <div class="lab-head"><span class="dot"></span><span class="mono">LAB I4.1 · 1-D FLIGHT SIMULATION</span></div>
+          <div class="sim-layout">
+            <div class="controls">
+              <label class="ctl"><span>Motor</span><span class="seg seg-sm wrap" id="simMotor"></span></label>
+              <label class="ctl"><span>Dry mass (no motor) <output class="mono" id="simMv">34 g</output></span><input type="range" id="simM" min="10" max="400" step="1" value="34" /></label>
+              <label class="ctl"><span>Body diameter <output class="mono" id="simDv">24.8 mm</output></span><input type="range" id="simD" min="13" max="66" step="0.1" value="24.8" /></label>
+              <label class="ctl"><span><span>Drag coefficient C<sub>d</sub></span> <output class="mono" id="simCv">0.75</output></span><input type="range" id="simC" min="0.3" max="1.4" step="0.01" value="0.75" /></label>
+              <button class="btn btn-primary btn-block" id="simGo" type="button">Launch simulation</button>
+            </div>
+            <div class="sim-view">
+              <canvas id="simCanvas" class="cv cv-sim" aria-label="Altitude and velocity versus time chart"></canvas>
+              <div class="readouts mono six">
+                <div><span>Apogee</span><b id="smAp">—</b></div>
+                <div><span>Max velocity</span><b id="smV">—</b></div>
+                <div><span>Max accel.</span><b id="smA">—</b></div>
+                <div><span>Off-rod speed</span><b id="smR">—</b></div>
+                <div><span>Ideal delay</span><b id="smDl">—</b></div>
+                <div><span>Best motor</span><b id="smBest">—</b></div>
+              </div>
+              <p class="verdict" id="simVerdict"></p>
+            </div>
+          </div>
+        </div>
+        <div class="module-text narrow">
+          <p>The simulator uses <span class="mono">D = ½ ρ v² C<sub>d</sub> A</span> with air density falling off exponentially with altitude, and burns propellant mass off in proportion to impulse delivered. Watch two numbers: <strong>off-rod speed</strong> should be at least ~15 m/s for the fins to have enough airflow to stabilise the rocket, and the <strong>ideal delay</strong> tells you which motor delay to buy.</p>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Drag can halve your apogee. Heavier rockets lose less to drag in relative terms, which is why a bigger motor doesn't scale altitude linearly.</p>
+          <button class="btn-complete" data-complete="i4" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- I5 Recovery -->
+      <section class="module reveal" id="i5-recovery" data-module="i5">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">I5</span> Intermediate · 7 min</p>
+          <h2>Recovery: sizing a parachute</h2>
+          <p class="lead">At terminal velocity, parachute drag exactly balances weight. Solve that balance and you can size a parachute for any rocket.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <p class="formula mono">m·g = ½ ρ v² C<sub>d</sub> A  ⇒  v = √(2 m g / (ρ C<sub>d</sub> A))</p>
+            <p>Target a descent rate of roughly <strong>3.5–6 m/s</strong>. Slower drifts a long way downwind; faster risks broken fins.</p>
+            <p>Drift distance is roughly <span class="mono">wind × (altitude / descent rate)</span>. For high flights, <strong>dual deployment</strong> fixes this: a small drogue at apogee for a fast, controlled fall, then the main chute at low altitude.</p>
+            <p>Small, light rockets often use a <strong>streamer</strong> instead — it adds enough drag to slow the fall without drifting.</p>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB I5.1 · DESCENT CALCULATOR</span></div>
+            <div class="lab-split">
+              <canvas id="chuteCanvas" class="cv cv-tall" aria-label="Parachute descent animation"></canvas>
+              <div class="controls">
+                <label class="ctl"><span>Rocket mass <output class="mono" id="chMv">60 g</output></span><input type="range" id="chM" min="20" max="3000" step="5" value="60" /></label>
+                <label class="ctl"><span>Chute diameter <output class="mono" id="chDv">30 cm</output></span><input type="range" id="chD" min="10" max="200" step="1" value="30" /></label>
+                <label class="ctl"><span>Canopy</span><span class="seg seg-sm" id="chType"><button data-cd="0.75" class="on">Flat</button><button data-cd="1.5">Dome</button><button data-cd="0.6">Cross</button></span></label>
+                <label class="ctl"><span>Wind <output class="mono" id="chWv">4 m/s</output></span><input type="range" id="chW" min="0" max="10" step="0.5" value="4" /></label>
+                <label class="ctl"><span>Deploy altitude <output class="mono" id="chHv">300 m</output></span><input type="range" id="chH" min="50" max="1500" step="10" value="300" /></label>
+              </div>
+            </div>
+            <div class="readouts mono four">
+              <div><span>Descent rate</span><b id="chV">—</b></div>
+              <div><span>Landing energy</span><b id="chE">—</b></div>
+              <div><span>Drift</span><b id="chDr">—</b></div>
+              <div><span>Ideal Ø @4.5 m/s</span><b id="chIdeal">—</b></div>
+            </div>
+            <p class="verdict" id="chVerdict"></p>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Descent rate scales with √(mass / area). Double the diameter and you halve the descent rate.</p>
+          <button class="btn-complete" data-complete="i5" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- I6 Nozzle -->
+      <section class="module reveal" id="i6-nozzle" data-module="i6">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">I6</span> Intermediate · 10 min</p>
+          <h2>The de Laval nozzle</h2>
+          <p class="lead">A converging–diverging nozzle turns hot, slow, high-pressure gas into a cold, supersonic jet. Its expansion ratio decides how well it matches the outside air.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <p>Subsonic gas speeds up as the duct <strong>narrows</strong>. At the narrowest point — the <strong>throat</strong> — the flow reaches exactly Mach 1. Past the throat something counter-intuitive happens: supersonic gas speeds up as the duct <strong>widens</strong>.</p>
+            <p>The <strong>expansion ratio</strong> ε = A<sub>exit</sub> / A<sub>throat</sub> sets the exit Mach number and exit pressure p<sub>e</sub>. Compare p<sub>e</sub> to ambient pressure p<sub>a</sub>:</p>
+            <ul class="legend-list compact">
+              <li><b class="warn">Over-expanded</b> (p<sub>e</sub> &lt; p<sub>a</sub>) — the plume pinches inward, with shock diamonds. Severe cases separate from the nozzle wall.</li>
+              <li><b class="good">Ideal</b> (p<sub>e</sub> ≈ p<sub>a</sub>) — maximum thrust for that altitude.</li>
+              <li><b class="bad">Under-expanded</b> (p<sub>e</sub> &gt; p<sub>a</sub>) — the plume balloons outward; energy is left on the table.</li>
+            </ul>
+            <p>That's why vacuum engines have enormous bells, and why sea-level engines look stubby.</p>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB I6.1 · ISENTROPIC NOZZLE (γ = 1.2)</span></div>
+            <canvas id="nozzleCanvas" class="cv cv-nozzle" aria-label="Nozzle and plume visualisation"></canvas>
+            <div class="controls">
+              <label class="ctl"><span>Expansion ratio ε <output class="mono" id="nzEv">16</output></span><input type="range" id="nzE" min="1.5" max="120" step="0.5" value="16" /></label>
+              <label class="ctl"><span>Chamber pressure <output class="mono" id="nzPv">7.0 MPa</output></span><input type="range" id="nzP" min="1" max="25" step="0.5" value="7" /></label>
+              <label class="ctl"><span>Altitude <output class="mono" id="nzHv">0 km</output></span><input type="range" id="nzH" min="0" max="80" step="0.5" value="0" /></label>
+            </div>
+            <div class="readouts mono four">
+              <div><span>Exit Mach</span><b id="nzM">—</b></div>
+              <div><span>p<sub>e</sub></span><b id="nzPe">—</b></div>
+              <div><span>p<sub>a</sub></span><b id="nzPa">—</b></div>
+              <div><span>Thrust coeff. C<sub>F</sub></span><b id="nzCf">—</b></div>
+            </div>
+            <p class="verdict" id="nzVerdict"></p>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Throat = Mach 1. Bigger expansion ratio = faster, lower-pressure exhaust. The best ratio depends on the altitude you fly at.</p>
+          <button class="btn-complete" data-complete="i6" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- I7 Staging -->
+      <section class="module reveal" id="i7-staging" data-module="i7">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">I7</span> Intermediate · 8 min</p>
+          <h2>Staging: throwing away the empty tanks</h2>
+          <p class="lead">Staging is the workaround for the rocket equation. Once a tank is empty it's dead weight — so drop it, and the remaining rocket has a fresh, better mass ratio.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <p>Each stage gets its own rocket equation, and the Δv values <strong>add up</strong>:</p>
+            <p class="formula mono">Δv<sub>total</sub> = Σ I<sub>sp,i</sub> · g₀ · ln(m<sub>0,i</sub> / m<sub>f,i</sub>)</p>
+            <p>The <strong>structural ratio</strong> is the fraction of each stage that isn't propellant — tanks, engines, plumbing. The higher it is, the more staging helps.</p>
+            <p>In model rocketry, staging uses a <span class="mono">-0</span> booster motor: when it burns out, hot particles blow forward and ignite the upper-stage motor directly.</p>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB I7.1 · ONE STAGE VS. TWO</span></div>
+            <div class="controls two">
+              <label class="ctl"><span>Payload <output class="mono" id="sgPv">4 %</output></span><input type="range" id="sgP" min="1" max="20" step="0.5" value="4" /></label>
+              <label class="ctl"><span>Structural ratio <output class="mono" id="sgSv">10 %</output></span><input type="range" id="sgS" min="4" max="30" step="0.5" value="10" /></label>
+              <label class="ctl"><span>Specific impulse <output class="mono" id="sgIv">330 s</output></span><input type="range" id="sgI" min="150" max="460" step="1" value="330" /></label>
+              <label class="ctl"><span>First-stage share <output class="mono" id="sgFv">75 %</output></span><input type="range" id="sgF" min="40" max="92" step="1" value="75" /></label>
+            </div>
+            <canvas id="stageCanvas" class="cv cv-stage" aria-label="Staging comparison animation"></canvas>
+            <div class="readouts mono four">
+              <div><span>Single stage</span><b id="sgD1">—</b></div>
+              <div><span>Two stage</span><b id="sgD2">—</b></div>
+              <div><span>Gain</span><b id="sgGain">—</b></div>
+              <div><span>Orbit?</span><b id="sgOrbit">—</b></div>
+            </div>
+            <button class="btn btn-primary btn-block" id="sgGo" type="button">Fly both</button>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Same propellant, same engines, more Δv — just by discarding dead mass partway through the flight.</p>
+          <button class="btn-complete" data-complete="i7" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- ============ QUIZ ============ -->
+      <section class="module reveal" id="quiz">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">Q</span> Knowledge check · 12 questions</p>
+          <h2>Pre-launch exam</h2>
+          <p class="lead">Twelve questions across both levels. Answer them all to get your flight rating.</p>
+        </header>
+        <div class="quiz" id="quizBox"></div>
+      </section>
+
+      <!-- ============ GLOSSARY ============ -->
+      <section class="module reveal" id="glossary">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">G</span> Reference</p>
+          <h2>Glossary</h2>
+        </header>
+        <input type="search" class="search" id="glossSearch" placeholder="Search terms — e.g. apogee, Isp, caliber…" aria-label="Search glossary" />
+        <dl class="glossary" id="glossList"></dl>
+      </section>
+
+      <!-- ============ FOOTER ============ -->
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <div class="footer-brand">
+            <span>Rocketry<b>Academy</b></span>
+            <p>Interactive fundamentals of model and amateur rocketry. Physics models are simplified for learning — use dedicated simulation software and your national association's guidance for real flights.</p>
+          </div>
+          <a href="#mission" class="btn btn-ghost btn-small">Back to top ↑</a>
+        </div>
+        <p class="copyright mono">© <span id="year">2026</span> Jaswanth Madiya. All rights reserved.</p>
+      </footer>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="assets/js/physics.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/beginner.js"></script>
+  <script src="assets/js/intermediate.js"></script>
+  <script src="assets/js/extras.js"></script>
+</body>
+</html>
