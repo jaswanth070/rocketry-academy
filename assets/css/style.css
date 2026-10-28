@@ -62,7 +62,7 @@ sub { font-size: .7em; }
 
 /* ---------- header ---------- */
 .site-header {
-  position: sticky; top: 0; z-index: 50;
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50;
   height: var(--header-h);
   display: flex; align-items: center; gap: 24px;
   padding: 0 24px;
@@ -413,7 +413,7 @@ input[type="range"]:hover::-webkit-slider-thumb { box-shadow: 0 0 0 7px rgba(255
 .toast.show { transform: translate(-50%, 0); visibility: visible; opacity: 1; }
 
 /* ---------- reveal ---------- */
-.reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s cubic-bezier(.2, .8, .2, 1); }
+.reveal { transform: translateY(18px); transition: transform .8s cubic-bezier(.2, .8, .2, 1); }
 .reveal.in { opacity: 1; transform: none; }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
