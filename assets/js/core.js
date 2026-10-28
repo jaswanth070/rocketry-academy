@@ -324,7 +324,7 @@
       titles[m.dataset.module] = { title: $('h2', m).textContent, time: ($('.module-tag', m).textContent.match(/(\d+) min/) || [])[1] };
     });
     modules.forEach((id) => {
-      const list = id[0] === 'b' ? $('#roadB') : $('#roadI');
+      const list = $({ b: '#roadB', i: '#roadI', a: '#roadA' }[id[0]]);
       const li = document.createElement('li');
       li.innerHTML = `<a href="#${$(`[data-module="${id}"]`).id}" data-mod="${id}"><span class="rc">${id.toUpperCase()}</span>${titles[id].title}<small>${titles[id].time} min</small></a>`;
       list.appendChild(li);
@@ -369,7 +369,7 @@
       if (!e.isIntersecting) return;
       const id = e.target.id;
       railLinks.forEach((a) => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
-      const lvl = id.startsWith('b') ? 'beginner' : id.startsWith('i') ? 'intermediate' : id;
+      const lvl = /^b\d/.test(id) ? 'beginner' : /^i\d/.test(id) ? 'intermediate' : /^a\d/.test(id) ? 'advanced' : id;
       $$('.top-nav a').forEach((a) => a.classList.toggle('active', a.getAttribute('href') === '#' + lvl));
     });
   }, { rootMargin: '-40% 0px -55% 0px' });

@@ -183,6 +183,124 @@
   P.descentRate = (mKg, dM, cd, h = 0) => Math.sqrt((2 * mKg * g0) / (P.rho(h) * cd * Math.PI * (dM / 2) ** 2));
   P.chuteFor = (mKg, v, cd) => Math.sqrt((8 * mKg * g0) / (Math.PI * P.rho(0) * cd * v * v));
 
+  /* =========================================================
+     Orbital mechanics (2-D, two-body)
+     ========================================================= */
+  const MU = 3.986004418e14, RE = 6371e3, MU_SUN = 1.32712440018e20, AU = 1.495978707e11;
+  Object.assign(P, { MU, RE, MU_SUN, AU });
+  P.vCirc = (r, mu = MU) => Math.sqrt(mu / r);
+  P.vEsc = (r, mu = MU) => Math.sqrt((2 * mu) / r);
+  P.visViva = (r, a, mu = MU) => Math.sqrt(mu * (2 / r - 1 / a));
+  P.period = (a, mu = MU) => 2 * Math.PI * Math.sqrt(a ** 3 / mu);
+
+  /* Orbital elements from a 2-D state vector */
+  P.elements = function (x, y, vx, vy, mu = MU) {
+    const r = Math.hypot(x, y), v2 = vx * vx + vy * vy, rv = x * vx + y * vy;
+    const h = x * vy - y * vx, E = v2 / 2 - mu / r;
+    const ex = ((v2 - mu / r) * x - rv * vx) / mu, ey = ((v2 - mu / r) * y - rv * vy) / mu;
+    const e = Math.hypot(ex, ey), p = (h * h) / mu;
+    const a = E < 0 ? -mu / (2 * E) : Infinity;
+    return { r, h, E, e, a, p, w: Math.atan2(ey, ex), rp: p / (1 + e), ra: e < 1 ? p / (1 - e) : Infinity, dir: Math.sign(h) || 1 };
+  };
+
+  /* Kepler's equation M = E − e sin E (Newton iteration) */
+  P.kepler = function (M, e) {
+    let E = e < 0.8 ? M : Math.PI;
+    for (let i = 0; i < 30; i++) E -= (E - e * Math.sin(E) - M) / (1 - e * Math.cos(E));
+    return E;
+  };
+  P.trueAnomaly = (E, e) => 2 * Math.atan2(Math.sqrt(1 + e) * Math.sin(E / 2), Math.sqrt(1 - e) * Math.cos(E / 2));
+
+  /* RK4 step for the two-body problem: s = [x, y, vx, vy] */
+  P.twoBody = function (s, dt, mu = MU) {
+    const f = (q) => { const r3 = Math.hypot(q[0], q[1]) ** 3; return [q[2], q[3], (-mu * q[0]) / r3, (-mu * q[1]) / r3]; };
+    const add = (a, b, k) => a.map((v, i) => v + b[i] * k);
+    const k1 = f(s), k2 = f(add(s, k1, dt / 2)), k3 = f(add(s, k2, dt / 2)), k4 = f(add(s, k3, dt));
+    return s.map((v, i) => v + (dt / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]));
+  };
+
+  /* Hohmann transfer between circular orbits r1 → r2 */
+  P.hohmann = function (r1, r2, mu = MU) {
+    const a = (r1 + r2) / 2;
+    const dv1 = Math.abs(Math.sqrt(mu / r1) * (Math.sqrt((2 * r2) / (r1 + r2)) - 1));
+    const dv2 = Math.abs(Math.sqrt(mu / r2) * (1 - Math.sqrt((2 * r1) / (r1 + r2))));
+    const t = Math.PI * Math.sqrt(a ** 3 / mu);
+    const phase = Math.PI - (2 * Math.PI * t) / P.period(r2, mu); // target lead angle at departure
+    return { a, dv1, dv2, dv: dv1 + dv2, t, phase, e: Math.abs(r2 - r1) / (r1 + r2) };
+  };
+  P.planeChange = (v, di) => 2 * v * Math.sin(di / 2);
+
+  /* ---------- Gravity-turn ascent to a target orbit ---------- */
+  // Lumped launcher: TWR at liftoff, constant Isp, accel capped at gMax.
+  P.ascent = function (o) {
+    const isp = o.isp || 340, twr = o.twr || 1.4, mf = o.mf || 0.056, cdA = o.cdA || 8e-6, gMax = o.gMax || 4.5;
+    const target = RE + (o.target || 200e3), kickAlt = o.kickAlt, kick = o.kickDeg * Math.PI / 180;
+    const ve = isp * g0, T0 = twr * g0; // per unit liftoff mass
+    let x = 0, y = RE, vx = 0, vy = 0, m = 1, t = 0;
+    let lossG = 0, lossD = 0, lossS = 0, kickT = null, maxQ = { q: 0, t: 0, h: 0 }, meco = null;
+    const dt = 0.1, path = [];
+    let outcome = 'orbit';
+    while (t < 1200) {
+      const r = Math.hypot(x, y), h = r - RE, ux = x / r, uy = y / r;
+      const v = Math.hypot(vx, vy), g = MU / (r * r);
+      const T = Math.min(T0, gMax * g0 * m); // throttle to the g limit
+      // thrust direction
+      let tx, ty;
+      if (h < kickAlt || v < 1) { tx = ux; ty = uy; }
+      else {
+        if (kickT === null) kickT = t;
+        if (t - kickT < 12) { // hold the kick attitude: tilt from local vertical toward downrange
+          const ex = uy, ey = -ux; // local horizontal (downrange)
+          tx = Math.cos(kick) * ux + Math.sin(kick) * ex; ty = Math.cos(kick) * uy + Math.sin(kick) * ey;
+        } else { tx = vx / v; ty = vy / v; } // prograde: gravity does the turning
+      }
+      const rho = P.rho(h), D = 0.5 * rho * v * v * cdA; // per unit liftoff mass; divided by m below
+      const ax = (T * tx - D * (v ? vx / v : 0)) / m - g * ux;
+      const ay = (T * ty - D * (v ? vy / v : 0)) / m - g * uy;
+      const sinGam = v ? (vx * ux + vy * uy) / v : 1;
+      lossG += g * sinGam * dt;
+      lossD += (D / m) * dt;
+      if (v) lossS += (T / m) * (1 - (tx * vx + ty * vy) / v) * dt;
+      const q = 0.5 * rho * v * v;
+      if (q > maxQ.q) maxQ = { q, t, h };
+      vx += ax * dt; vy += ay * dt; x += vx * dt; y += vy * dt;
+      m -= (T / ve) * dt;
+      t += dt;
+      if (Math.round(t / dt) % 10 === 0) path.push([x, y, t, 1]);
+      if (Math.hypot(x, y) < RE) { outcome = 'crash'; break; }
+      const el = P.elements(x, y, vx, vy);
+      if ((kickT !== null && el.e < 1 && el.ra >= target) || m <= mf) { meco = { t, h: Math.hypot(x, y) - RE, v: Math.hypot(vx, vy), m, el }; break; }
+    }
+    const res = { path, kickT, maxQ, lossG, lossD, lossS, outcome, meco, dvBudget: ve * Math.log(1 / mf) };
+    if (outcome === 'crash' || !meco) { res.outcome = 'crash'; return res; }
+    // coast to apoapsis (gravity + drag), then circularise with what is left
+    let s = [x, y, vx, vy], prevR = 0;
+    for (let i = 0; i < 4000; i++) {
+      s = P.twoBody(s, 1);
+      const r = Math.hypot(s[0], s[1]);
+      if (i % 5 === 0) path.push([s[0], s[1], t + i, 0]);
+      if (r < RE) { res.outcome = 'crash'; return res; }
+      if (r < prevR) break;
+      prevR = r;
+    }
+    const el = P.elements(...s), rA = Math.hypot(s[0], s[1]);
+    const need = Math.max(0, P.vCirc(rA) - Math.hypot(s[2], s[3]));
+    const left = ve * Math.log(meco.m / mf);
+    res.apo = rA - RE; res.circ = need; res.left = left;
+    res.dvUsed = ve * Math.log(1 / meco.m) + Math.min(need, left);
+    if (need <= left) {
+      res.final = { rp: rA - RE, ra: rA - RE }; res.margin = left - need;
+      res.outcome = rA - RE >= 150e3 ? 'orbit' : 'suborbital';
+    } else {
+      // partial circularisation with the propellant that is left
+      const k = (Math.hypot(s[2], s[3]) + left) / Math.hypot(s[2], s[3]);
+      const e2 = P.elements(s[0], s[1], s[2] * k, s[3] * k);
+      res.final = { rp: e2.rp - RE, ra: e2.ra - RE }; res.margin = left - need;
+      res.outcome = e2.rp - RE > 120e3 ? 'orbit-low' : 'suborbital';
+    }
+    return res;
+  };
+
   RA.phys = P;
   if (typeof module !== 'undefined' && module.exports) module.exports = P;
 })(typeof window !== 'undefined' ? window : globalThis);

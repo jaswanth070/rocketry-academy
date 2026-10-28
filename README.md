@@ -1,6 +1,6 @@
 # Rocketry Academy
 
-An interactive learning site covering **beginner and intermediate rocketry**. Every module pairs a short explanation with a live, animated lab.
+An interactive learning site covering **beginner and intermediate rocketry and orbital mechanics**. Every module pairs a short explanation with a live, animated lab.
 
 ## Modules
 
@@ -28,7 +28,17 @@ An interactive learning site covering **beginner and intermediate rocketry**. Ev
 | I6 | de Laval nozzle | Isentropic nozzle with over/under-expanded plume |
 | I7 | Staging | One stage vs. two |
 
-Plus a 12-question knowledge check and a searchable glossary. Progress is saved in the browser.
+**Level 03 — Advanced: orbital mechanics**
+
+| # | Module | Lab |
+|---|--------|-----|
+| A1 | Kepler's three laws | Equal-area orbit sweep + T² = a³ log–log chart |
+| A2 | Orbits & vis-viva | Newton's cannon, to scale |
+| A3 | Gravity turn | 2-D ascent simulator with outcome map, gravity and drag losses |
+| A4 | Hohmann transfers | LEO→GEO, LEO→Moon, Earth→Mars with phase angles |
+| A5 | Orbital maneuvers | Prograde/retrograde/radial burn sandbox with challenges, plane-change cost |
+
+Plus a 16-question knowledge check and a searchable glossary. Progress is saved in the browser.
 
 ## Running locally
 
@@ -48,10 +58,11 @@ Works as-is on GitHub Pages, Vercel, Netlify or any static host — point it at 
 ```
 index.html
 assets/css/style.css
-assets/js/physics.js       # pure physics: sim, Barrowman, nozzle, rocket equation
+assets/js/physics.js       # pure physics: sim, Barrowman, nozzle, rocket equation, orbits, ascent
 assets/js/core.js          # canvas helpers, rocket/flame drawing, progress, hero
 assets/js/beginner.js      # B1–B7 labs
 assets/js/intermediate.js  # I1–I7 labs
+assets/js/advanced.js      # A1–A5 orbital labs
 assets/js/extras.js        # quiz + glossary
 ```
 

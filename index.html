@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Rocketry Academy</title>
-  <meta name="description" content="Interactive beginner and intermediate rocketry: anatomy, Newton's laws, stability, motors, the rocket equation, nozzles, recovery and staging — with live simulations." />
+  <meta name="description" content="Interactive rocketry from beginner to orbital mechanics: anatomy, stability, motors, the rocket equation, nozzles, staging, Kepler's laws, gravity turns and Hohmann transfers — with live simulations." />
   <meta name="theme-color" content="#05070d" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 4c8 8 12 20 12 32v10H20V36c0-12 4-24 12-32z' fill='%23e8edf5'/%3E%3Cpath d='M20 38l-8 14h8zM44 38l8 14h-8z' fill='%23ff6b2c'/%3E%3Cpath d='M26 48h12l-6 12z' fill='%23ffb347'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -28,6 +28,7 @@
     <nav class="top-nav" aria-label="Primary">
       <a href="#beginner">Beginner</a>
       <a href="#intermediate">Intermediate</a>
+      <a href="#advanced">Advanced</a>
       <a href="#quiz">Quiz</a>
       <a href="#glossary">Glossary</a>
     </nav>
@@ -36,7 +37,7 @@
         <circle cx="18" cy="18" r="15.5" class="ring-bg" />
         <circle cx="18" cy="18" r="15.5" class="ring-fg" id="progressRing" />
       </svg>
-      <span class="mono"><b id="progressCount">0</b>/<span id="progressTotal">14</span></span>
+      <span class="mono"><b id="progressCount">0</b>/<span id="progressTotal">19</span></span>
     </div>
     <button class="menu-btn" id="menuBtn" aria-label="Open module list" aria-expanded="false">
       <span></span><span></span><span></span>
@@ -73,6 +74,16 @@
           </ol>
         </div>
         <div class="rail-group">
+          <p class="rail-level"><span class="lvl lvl-a">03</span> Advanced</p>
+          <ol>
+            <li><a href="#a1-kepler" data-mod="a1"><span class="rc">A1</span>Kepler's laws</a></li>
+            <li><a href="#a2-orbits" data-mod="a2"><span class="rc">A2</span>Orbits &amp; vis-viva</a></li>
+            <li><a href="#a3-gravity" data-mod="a3"><span class="rc">A3</span>Gravity turn</a></li>
+            <li><a href="#a4-hohmann" data-mod="a4"><span class="rc">A4</span>Hohmann transfers</a></li>
+            <li><a href="#a5-maneuvers" data-mod="a5"><span class="rc">A5</span>Orbital maneuvers</a></li>
+          </ol>
+        </div>
+        <div class="rail-group">
           <ol>
             <li><a href="#quiz"><span class="rc">Q</span>Knowledge check</a></li>
             <li><a href="#glossary"><span class="rc">G</span>Glossary</a></li>
@@ -89,15 +100,15 @@
         <div class="hero-content">
           <p class="eyebrow mono"><span class="blink"></span> MISSION BRIEFING · T-MINUS LEARNING</p>
           <h1>Rocketry, from <span class="grad">first principles</span> to flight.</h1>
-          <p class="hero-sub">Fourteen hands-on modules that take you from "what is a nose cone?" to nozzle expansion ratios and multi-stage Δv. Every concept comes with a live lab — drag, tweak, launch, and see the physics respond.</p>
+          <p class="hero-sub">Nineteen hands-on modules that take you from "what is a nose cone?" to nozzle expansion ratios, gravity turns and Hohmann transfers. Every concept comes with a live lab — drag, tweak, launch, and see the physics respond.</p>
           <div class="hero-cta">
             <a href="#beginner" class="btn btn-primary">Start the Beginner track</a>
             <a href="#intermediate" class="btn btn-ghost">Jump to Intermediate</a>
           </div>
           <div class="hero-stats mono">
-            <div><b>14</b><span>modules</span></div>
-            <div><b>15+</b><span>live labs</span></div>
-            <div><b>2</b><span>levels</span></div>
+            <div><b>19</b><span>modules</span></div>
+            <div><b>25+</b><span>live labs</span></div>
+            <div><b>3</b><span>levels</span></div>
             <div><b>0 kg</b><span>propellant needed</span></div>
           </div>
         </div>
@@ -112,7 +123,7 @@
       <section class="roadmap" id="roadmap">
         <div class="section-intro">
           <p class="eyebrow mono">FLIGHT PLAN</p>
-          <h2>Two stages to orbit</h2>
+          <h2>Three stages to orbit</h2>
           <p>Work through the levels in order — each module builds on the one before it. Mark modules complete as you go; your progress is saved in this browser.</p>
         </div>
         <div class="roadmap-grid">
@@ -125,6 +136,11 @@
             <div class="road-head"><span class="lvl lvl-i">02</span><h3>Intermediate — Engineering a flight</h3></div>
             <p>The quantitative side: impulse, Isp, Δv, drag-aware simulation, parachute sizing, nozzle expansion and staging.</p>
             <ul class="road-list" id="roadI"></ul>
+          </article>
+          <article class="road-card">
+            <div class="road-head"><span class="lvl lvl-a">03</span><h3>Advanced — Orbital mechanics</h3></div>
+            <p>Leaving the atmosphere behind: Kepler's laws, what an orbit really is, flying the ascent, and moving between orbits.</p>
+            <ul class="road-list" id="roadA"></ul>
           </article>
         </div>
       </section>
@@ -782,12 +798,261 @@
         </div>
       </section>
 
+      <!-- =====================================================
+           LEVEL 03 — ADVANCED · ORBITAL MECHANICS
+           ===================================================== -->
+      <div class="track-banner" id="advanced">
+        <span class="lvl lvl-a big">03</span>
+        <div>
+          <p class="eyebrow mono">LEVEL 03</p>
+          <h2>Advanced · Orbital mechanics</h2>
+        </div>
+      </div>
+
+      <!-- A1 Kepler -->
+      <section class="module reveal" id="a1-kepler" data-module="a1">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">A1</span> Advanced · 10 min</p>
+          <h2>Kepler's three laws</h2>
+          <p class="lead">In 1609–1619 Johannes Kepler distilled decades of Tycho Brahe's planetary observations into three rules. Newton later showed they all follow from one inverse-square law of gravity — and they apply just as well to satellites as to planets.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <ol class="laws">
+              <li><b>Orbits are ellipses</b> with the central body at one <em>focus</em> — not at the centre. Eccentricity <span class="mono">e</span> measures how stretched the ellipse is: 0 is a circle, close to 1 is a long thin ellipse.</li>
+              <li><b>Equal areas in equal times.</b> The line from the Sun to the planet sweeps equal areas in equal times, so the planet moves fastest at <strong>periapsis</strong> (closest point) and slowest at <strong>apoapsis</strong> (farthest point).</li>
+              <li><b>T² ∝ a³.</b> The square of the orbital period is proportional to the cube of the semi-major axis. In years and AU around the Sun, simply <span class="mono">T² = a³</span>.</li>
+            </ol>
+            <p>The general form, which works around any body of gravitational parameter μ = G·M:</p>
+            <p class="formula mono">T = 2π · √(a³ / μ)</p>
+            <p>The speed ratio follows from the second law: <span class="mono">v<sub>p</sub> / v<sub>a</sub> = (1 + e) / (1 − e)</span>.</p>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB A1.1 · ORBIT SWEEP (LAWS 1 &amp; 2)</span></div>
+            <canvas id="keplerCanvas" class="cv cv-orbit" aria-label="Elliptical orbit with equal-area sectors"></canvas>
+            <div class="controls">
+              <label class="ctl"><span>Eccentricity e <output class="mono" id="kpEv">0.50</output></span><input type="range" id="kpE" min="0" max="0.9" step="0.01" value="0.5" /></label>
+            </div>
+            <label class="switch"><input type="checkbox" id="kpSectors" checked /> <span>Show 8 equal-time sectors</span></label>
+            <div class="readouts mono four">
+              <div><span>Periapsis</span><b id="kpRp">—</b></div>
+              <div><span>Apoapsis</span><b id="kpRa">—</b></div>
+              <div><span>v<sub>p</sub> / v<sub>a</sub></span><b id="kpRatio">—</b></div>
+              <div><span>Speed now</span><b id="kpV">—</b></div>
+            </div>
+            <div class="lab-head lab-sub"><span class="dot"></span><span class="mono">LAB A1.2 · THIRD LAW, SOLAR SYSTEM (LOG–LOG)</span></div>
+            <canvas id="thirdCanvas" class="cv cv-chart" aria-label="Period versus semi-major axis on log-log axes"></canvas>
+            <div class="controls">
+              <label class="ctl"><span>Semi-major axis a <output class="mono" id="kpAv">1.00 AU</output></span><input type="range" id="kpA" min="0" max="1000" step="1" value="380" /></label>
+            </div>
+            <div class="readouts mono">
+              <div><span>Period T = a<sup>1.5</sup></span><b id="kpT">—</b></div>
+              <div><span>T² / a³</span><b id="kpK">1.000</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Ellipse with the body at a focus; fastest at periapsis; period depends only on the semi-major axis — not on eccentricity.</p>
+          <button class="btn-complete" data-complete="a1" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- A2 Orbits -->
+      <section class="module reveal" id="a2-orbits" data-module="a2">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">A2</span> Advanced · 10 min</p>
+          <h2>What an orbit really is: Newton's cannonball</h2>
+          <p class="lead">An orbit is falling around the planet — moving sideways so fast that the ground curves away beneath you as quickly as you fall towards it. Newton imagined it as a cannon on a very tall mountain.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <p>Fire the cannon horizontally. Slow shots fall back to Earth. Faster shots land further away — until, at <strong>circular velocity</strong>, the shot never lands at all. Faster still, the orbit stretches into an ellipse; at <strong>escape velocity</strong> it never comes back.</p>
+            <p class="formula mono">v<sub>circ</sub> = √(μ / r)    v<sub>esc</sub> = √(2μ / r)</p>
+            <p>Everything in between is captured by the <strong>vis-viva equation</strong>, the single most useful formula in orbital mechanics. It gives the speed anywhere on any orbit from just the current radius <span class="mono">r</span> and the semi-major axis <span class="mono">a</span>:</p>
+            <p class="formula mono">v² = μ · (2/r − 1/a)</p>
+            <p>For Earth, μ = 3.986 × 10¹⁴ m³/s². At the ISS's 400 km altitude, circular velocity is about <strong>7.67 km/s</strong> — one lap every 92 minutes. Note that orbits are about <em>sideways speed</em>, not height: getting to 400 km takes far less energy than going 7.67 km/s.</p>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB A2.1 · NEWTON'S CANNON (TO SCALE)</span></div>
+            <canvas id="cannonCanvas" class="cv cv-orbit" aria-label="Newton's cannon orbit simulation"></canvas>
+            <div class="controls two">
+              <label class="ctl"><span>Launch speed <output class="mono" id="cnVv">7.67 km/s</output></span><input type="range" id="cnV" min="1" max="12.5" step="0.01" value="7.67" /></label>
+              <label class="ctl"><span>Mountain height <output class="mono" id="cnHv">400 km</output></span><input type="range" id="cnH" min="150" max="3000" step="10" value="400" /></label>
+            </div>
+            <div class="chips" id="cnPresets"></div>
+            <div class="readouts mono six">
+              <div><span>v circular</span><b id="cnVc">—</b></div>
+              <div><span>v escape</span><b id="cnVe">—</b></div>
+              <div><span>Trajectory</span><b id="cnType">—</b></div>
+              <div><span>Periapsis alt.</span><b id="cnPe">—</b></div>
+              <div><span>Apoapsis alt.</span><b id="cnAp">—</b></div>
+              <div><span>Period</span><b id="cnT">—</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Orbit = sideways speed. Below v<sub>circ</sub> you come back down; between v<sub>circ</sub> and v<sub>esc</sub> you're in an ellipse; at v<sub>esc</sub> (= √2 · v<sub>circ</sub>) you leave for good.</p>
+          <button class="btn-complete" data-complete="a2" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- A3 Gravity turn -->
+      <section class="module reveal" id="a3-gravity" data-module="a3">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">A3</span> Advanced · 12 min</p>
+          <h2>The gravity turn: flying to orbit</h2>
+          <p class="lead">A rocket can't just go up and then turn sideways — it must build 7.8 km/s of horizontal speed while climbing out of the atmosphere. The gravity turn lets gravity do the steering for free.</p>
+        </header>
+        <div class="module-text narrow">
+          <p>The rocket lifts off vertically, then makes a small <strong>pitch kick</strong> of a few degrees. From then on it thrusts exactly along its velocity vector (<em>prograde</em>) and gravity gradually bends the path over towards horizontal. Because thrust never fights the velocity direction, the airframe sees almost no sideways load while passing through <strong>max-Q</strong> — the moment of peak aerodynamic pressure.</p>
+          <p>Every second spent climbing costs <strong>gravity loss</strong> (<span class="mono">∫ g·sin γ dt</span>, where γ is the flight-path angle). Turning early cuts gravity loss but keeps the rocket low in thick air (more <strong>drag loss</strong>), or makes it fall back. Turning late wastes Δv fighting gravity. The lab below flies a lumped two-stage launcher (Isp 340 s, 9.6 km/s of Δv) to a 200 km orbit, using the same strategy as the game <em>Kerbal Space Program</em>: burn until apoapsis hits 200 km, coast up, circularise.</p>
+        </div>
+        <div class="lab lab-wide">
+          <div class="lab-head"><span class="dot"></span><span class="mono">LAB A3.1 · ASCENT SIMULATOR (2-D, ROUND EARTH, NO ROTATION)</span></div>
+          <div class="sim-layout">
+            <div class="controls">
+              <label class="ctl"><span>Pitch-kick altitude <output class="mono" id="gtAv">500 m</output></span><input type="range" id="gtA" min="100" max="3000" step="10" value="500" /></label>
+              <label class="ctl"><span>Pitch-kick angle <output class="mono" id="gtKv">5.0°</output></span><input type="range" id="gtK" min="1" max="15" step="0.1" value="5" /></label>
+              <div class="ctl"><span>Launch map · click to pick <output class="mono" id="gtMapState">computing…</output></span>
+                <canvas id="gtMap" class="cv cv-map" aria-label="Outcome map of kick altitude versus kick angle"></canvas>
+                <span class="map-legend mono"><i style="--c:var(--green)"></i>orbit <i style="--c:var(--yellow)"></i>low orbit <i style="--c:var(--flame)"></i>suborbital <i style="--c:var(--red)"></i>crash</span>
+              </div>
+              <button class="btn btn-primary btn-block" id="gtGo" type="button">Launch</button>
+            </div>
+            <div class="sim-view">
+              <canvas id="gtCanvas" class="cv cv-sim" aria-label="Ascent trajectory, altitude versus downrange distance"></canvas>
+              <div class="readouts mono six">
+                <div><span>Max-Q</span><b id="gtQ">—</b></div>
+                <div><span>Engine cutoff</span><b id="gtM">—</b></div>
+                <div><span>Final orbit</span><b id="gtO">—</b></div>
+                <div><span>Gravity loss</span><b id="gtLg">—</b></div>
+                <div><span>Drag loss</span><b id="gtLd">—</b></div>
+                <div><span>Δv margin</span><b id="gtMar">—</b></div>
+              </div>
+              <p class="verdict" id="gtVerdict"></p>
+            </div>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Orbit is a horizontal-speed problem. A well-timed pitch kick plus prograde flight trades gravity loss against drag loss — ~1.2–1.5 km/s of a real launcher's budget goes to gravity alone.</p>
+          <button class="btn-complete" data-complete="a3" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- A4 Hohmann -->
+      <section class="module reveal" id="a4-hohmann" data-module="a4">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">A4</span> Advanced · 12 min</p>
+          <h2>Hohmann transfer orbits</h2>
+          <p class="lead">The most fuel-efficient way (for most cases) to move between two circular orbits: two prograde burns and a half-ellipse coast. Walter Hohmann worked it out in 1925 — decades before anyone could fly it.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <p>The transfer orbit is an ellipse that just touches both circles: periapsis on the inner orbit (r₁), apoapsis on the outer (r₂), so its semi-major axis is <span class="mono">a = (r₁ + r₂) / 2</span>.</p>
+            <ol class="laws">
+              <li><b>Burn 1</b> at r₁, prograde: speed up from circular speed to the transfer orbit's periapsis speed.</li>
+              <li><b>Coast</b> half an orbit: <span class="mono">t = π √(a³/μ)</span>.</li>
+              <li><b>Burn 2</b> at r₂, prograde again: speed up to circular speed there. (You arrive slower than circular — you climbed out of the gravity well.)</li>
+            </ol>
+            <p class="formula mono">Δv₁ = √(μ/r₁) · (√(2r₂/(r₁+r₂)) − 1)<br />Δv₂ = √(μ/r₂) · (1 − √(2r₁/(r₁+r₂)))</p>
+            <p>To meet a moving target — a space station, the Moon, Mars — you must leave when the target is the right <strong>phase angle</strong> ahead, so it arrives at apoapsis at the same moment you do. For Mars that alignment comes round only every ~26 months: a <strong>launch window</strong>.</p>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB A4.1 · TRANSFER PLANNER</span></div>
+            <div class="seg" id="hmPreset" role="group" aria-label="Transfer preset">
+              <button data-p="geo" class="on">LEO → GEO</button>
+              <button data-p="moon">LEO → Moon</button>
+              <button data-p="mars">Earth → Mars</button>
+              <button data-p="custom">Custom</button>
+            </div>
+            <canvas id="hohmannCanvas" class="cv cv-orbit" aria-label="Hohmann transfer animation"></canvas>
+            <div class="controls two" id="hmCustom" hidden>
+              <label class="ctl"><span>Inner orbit alt. <output class="mono" id="hmR1v">400 km</output></span><input type="range" id="hmR1" min="0" max="1000" step="1" value="0" /></label>
+              <label class="ctl"><span>Outer orbit alt. <output class="mono" id="hmR2v">35,786 km</output></span><input type="range" id="hmR2" min="0" max="1000" step="1" value="700" /></label>
+            </div>
+            <div class="readouts mono six">
+              <div><span>Burn 1 Δv₁</span><b id="hmD1">—</b></div>
+              <div><span>Burn 2 Δv₂</span><b id="hmD2">—</b></div>
+              <div><span>Total Δv</span><b id="hmD">—</b></div>
+              <div><span>Transfer time</span><b id="hmT">—</b></div>
+              <div><span>Target phase lead</span><b id="hmPh">—</b></div>
+              <div><span>Transfer e</span><b id="hmE">—</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Two prograde burns, half an ellipse in between. LEO → GEO costs ~3.9 km/s and 5¼ hours; Earth → Mars ~259 days, departing when Mars leads Earth by ~44°.</p>
+          <button class="btn-complete" data-complete="a4" type="button">Mark complete</button>
+        </div>
+      </section>
+
+      <!-- A5 Maneuvers -->
+      <section class="module reveal" id="a5-maneuvers" data-module="a5">
+        <header class="module-head">
+          <p class="module-tag mono"><span class="code">A5</span> Advanced · 12 min</p>
+          <h2>Orbital maneuvers: flying in a counter-intuitive world</h2>
+          <p class="lead">In orbit, "speed up" and "go higher" are the same command — but the height changes on the <em>other side</em> of the planet. Get hands-on in the sandbox, then complete the challenges.</p>
+        </header>
+        <div class="module-grid">
+          <div class="module-text">
+            <dl class="force-list">
+              <div><dt><i style="--c:var(--green)"></i>Prograde</dt><dd>Along your velocity. Raises the <strong>opposite</strong> side of the orbit. Burn at periapsis to raise apoapsis.</dd></div>
+              <div><dt><i style="--c:var(--red)"></i>Retrograde</dt><dd>Against your velocity. Lowers the opposite side — how spacecraft de-orbit.</dd></div>
+              <div><dt><i style="--c:var(--cyan)"></i>Radial in / out</dt><dd>Towards or away from the planet. Rotates the orbit around you; rarely efficient.</dd></div>
+              <div><dt><i style="--c:var(--violet)"></i>Normal / anti-normal</dt><dd>Perpendicular to the orbital plane. Changes inclination — the most expensive maneuver of all.</dd></div>
+            </dl>
+            <p>Burns are most efficient where you're moving fastest — deep in the gravity well at periapsis. This is the <strong>Oberth effect</strong>: the same Δv adds more orbital energy when speed is high, because energy grows with v².</p>
+            <p>Plane changes are costly because you must redirect your whole velocity: <span class="mono">Δv = 2v · sin(Δi/2)</span>. That is why plane changes are done at apoapsis, where v is lowest — and why launching due east from near the equator matters so much.</p>
+          </div>
+          <div class="lab">
+            <div class="lab-head"><span class="dot"></span><span class="mono">LAB A5.1 · MANEUVER SANDBOX (400 KM START)</span></div>
+            <canvas id="mnCanvas" class="cv cv-orbit" aria-label="Orbital maneuver sandbox"></canvas>
+            <div class="burn-row">
+              <span class="seg seg-sm" id="mnStep"><button data-dv="10">10</button><button data-dv="50" class="on">50</button><button data-dv="200">200</button></span>
+              <span class="mono burn-unit">m/s</span>
+            </div>
+            <div class="burn-grid">
+              <button class="btn btn-small burn pro" data-dir="pro" type="button">▲ Prograde</button>
+              <button class="btn btn-small burn retro" data-dir="retro" type="button">▼ Retrograde</button>
+              <button class="btn btn-small burn rad" data-dir="out" type="button">◀ Radial out</button>
+              <button class="btn btn-small burn rad" data-dir="in" type="button">▶ Radial in</button>
+            </div>
+            <div class="readouts mono six">
+              <div><span>Apoapsis</span><b id="mnAp">—</b></div>
+              <div><span>Periapsis</span><b id="mnPe">—</b></div>
+              <div><span>Eccentricity</span><b id="mnE">—</b></div>
+              <div><span>Period</span><b id="mnT">—</b></div>
+              <div><span>Speed</span><b id="mnV">—</b></div>
+              <div><span>Δv spent</span><b id="mnDv">—</b></div>
+            </div>
+            <ul class="challenges" id="mnChallenges"></ul>
+            <div class="burn-row">
+              <button class="btn btn-ghost btn-small" id="mnWarp" type="button" aria-pressed="false">Time warp ×4</button>
+              <button class="btn btn-ghost btn-small" id="mnReset" type="button">Reset orbit</button>
+            </div>
+            <div class="lab-head lab-sub"><span class="dot"></span><span class="mono">LAB A5.2 · PLANE-CHANGE COST</span></div>
+            <div class="controls two">
+              <label class="ctl"><span>Inclination change Δi <output class="mono" id="pcIv">28.5°</output></span><input type="range" id="pcI" min="0" max="90" step="0.5" value="28.5" /></label>
+              <label class="ctl"><span>Where</span><span class="seg seg-sm" id="pcWhere"><button data-alt="400" class="on">LEO 400 km</button><button data-alt="35786">GEO</button></span></label>
+            </div>
+            <div class="readouts mono">
+              <div><span>Orbital speed</span><b id="pcV">—</b></div>
+              <div><span>Δv = 2v·sin(Δi/2)</span><b id="pcDv" class="xl">—</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="module-foot">
+          <p class="takeaway"><strong>Key takeaway</strong> Prograde raises the far side, retrograde lowers it. Burn low and fast (Oberth), change planes high and slow.</p>
+          <button class="btn-complete" data-complete="a5" type="button">Mark complete</button>
+        </div>
+      </section>
+
       <!-- ============ QUIZ ============ -->
       <section class="module reveal" id="quiz">
         <header class="module-head">
-          <p class="module-tag mono"><span class="code">Q</span> Knowledge check · 12 questions</p>
+          <p class="module-tag mono"><span class="code">Q</span> Knowledge check · 16 questions</p>
           <h2>Pre-launch exam</h2>
-          <p class="lead">Twelve questions across both levels. Answer them all to get your flight rating.</p>
+          <p class="lead">Sixteen questions across all three levels. Answer them all to get your flight rating.</p>
         </header>
         <div class="quiz" id="quizBox"></div>
       </section>
@@ -822,6 +1087,7 @@
   <script src="assets/js/core.js"></script>
   <script src="assets/js/beginner.js"></script>
   <script src="assets/js/intermediate.js"></script>
+  <script src="assets/js/advanced.js"></script>
   <script src="assets/js/extras.js"></script>
 </body>
 </html>

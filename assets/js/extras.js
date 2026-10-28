@@ -16,6 +16,10 @@
     ['You double a parachute\'s diameter. What happens to descent rate?', ['It doubles', 'It halves', 'It drops by a quarter', 'No change'], 1, 'Area goes up 4×, and v ∝ 1/√A, so the descent rate halves.', 'I5'],
     ['What is the Mach number at the throat of a working de Laval nozzle?', ['0', '0.5', '1', 'Equal to the exit Mach number'], 2, 'The flow is choked at the throat — exactly Mach 1 — and becomes supersonic in the diverging bell.', 'I6'],
     ['Why does staging increase Δv?', ['The upper stage has a bigger engine', 'Dropping empty tanks gives the remaining rocket a better mass ratio', 'It reduces drag', 'Separation gives an extra push'], 1, 'Empty structure is dead weight. Discarding it means the next stage accelerates less mass.', 'I7'],
+    ['A satellite\'s orbit has e = 0.5. Where is it moving fastest?', ['At apoapsis', 'At periapsis', 'Same speed everywhere', 'Halfway between'], 1, 'Kepler\'s second law: equal areas in equal times, so it moves fastest closest in. Here v_p / v_a = (1 + e)/(1 − e) = 3.', 'A1'],
+    ['Escape velocity at any radius is how many times circular velocity?', ['1.5 ×', '√2 ≈ 1.414 ×', '2 ×', 'π ×'], 1, 'v_esc = √(2μ/r) and v_circ = √(μ/r), so the ratio is exactly √2.', 'A2'],
+    ['What does a gravity turn rely on to pitch the rocket over?', ['Large aerodynamic fins', 'Gravity bending the velocity vector while thrust stays prograde', 'Gimballing hard sideways at max-Q', 'Earth\'s rotation alone'], 1, 'After a small pitch kick the rocket thrusts along its velocity; gravity curves the path, keeping side loads near zero.', 'A3'],
+    ['In a Hohmann transfer from LEO to GEO, which way are the two burns?', ['Both retrograde', 'Prograde, then retrograde', 'Both prograde', 'Radial, then normal'], 2, 'Speed up to enter the transfer ellipse, then speed up again at apoapsis to circularise.', 'A4'],
   ];
   const box = $('#quizBox');
   let answered = 0, score = 0;
@@ -89,6 +93,19 @@
     ['Thrust-to-weight ratio', 'Thrust divided by weight. Must exceed 1 to lift off; aim for 5 or more.'],
     ['Wadding', 'Flame-resistant material protecting the parachute from ejection gases.'],
     ['Weathercocking', 'A stable rocket turning into the wind after leaving the rod.'],
+    ['Apoapsis / periapsis', 'Farthest and closest points of an orbit (apogee / perigee around Earth).'],
+    ['Eccentricity (e)', 'How stretched an orbit is: 0 circle, 0–1 ellipse, 1 parabola, > 1 hyperbola.'],
+    ['Semi-major axis (a)', 'Half the long axis of an ellipse. Alone it sets the orbital period and energy.'],
+    ['Kepler\'s laws', 'Ellipses with the body at a focus; equal areas in equal times; T² ∝ a³.'],
+    ['Vis-viva equation', 'v² = μ(2/r − 1/a): orbital speed from radius and semi-major axis.'],
+    ['Escape velocity', '√(2μ/r) — the speed needed to leave a body\'s gravity without further thrust.'],
+    ['Gravity turn', 'Ascent technique: small pitch kick, then thrust prograde and let gravity bend the path.'],
+    ['Gravity loss', 'Δv spent holding the rocket up against gravity during ascent: ∫ g·sin γ dt.'],
+    ['Hohmann transfer', 'Two-burn transfer between circular orbits along a half-ellipse touching both.'],
+    ['Phase angle', 'How far ahead a target must be at departure so a transfer arrives as it does.'],
+    ['Prograde / retrograde', 'Thrusting along / against the direction of travel.'],
+    ['Oberth effect', 'A burn adds more orbital energy when made at high speed, e.g. at periapsis.'],
+    ['Plane change', 'Rotating the orbital plane; costs Δv = 2v·sin(Δi/2), cheapest where v is low.'],
   ];
   const dl = $('#glossList'), inp = $('#glossSearch');
   const esc = (s) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
